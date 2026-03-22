@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Bogorodsk RP | Правила игры</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    :root {
+      --bg-color: #020617;
+      --bg-gradient: radial-gradient(circle at top, #0b1d3a 0%, #020617 55%, #000000 100%);
+      --accent: #4ea8ff;
+      --accent-soft: rgba(78, 168, 255, 0.35);
+      --accent-strong: rgba(78, 168, 255, 0.95);
+      --text-main: #f5f7ff;
+      --text-muted: #9aa3af;
+      --danger: #ff5c7a;
+      --warning: #ffcb6b;
+      --success: #7ed957;
+      --border-glass: rgba(110, 178, 255, 0.35);
+      --glass-bg: rgba(4, 10, 24, 0.82);
+      --glass-blur: 20px;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-soft: 0 24px 55px rgba(1, 4, 12, 0.9);
+      --transition-med: 0.26s ease-out;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(15,23,42,0.86), rgba(15,23,42,0.97)),
+        url("bg-bogorodsk.jpg") center/cover no-repeat;
+      opacity: 0.5;
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: -60px;
+      background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.7));
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .page-wrap {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* HEADER как на сайте с правилами ДС */
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 18px 22px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(3, 10, 30, 0.96), rgba(6, 14, 40, 0.98));
+      border: 1px solid rgba(78, 168, 255, 0.45);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(24px);
+    }
+
+    .project-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: radial-gradient(circle at left, rgba(78, 168, 255, 0.5), transparent 60%);
+      border: 1px solid rgba(78, 168, 255, 0.6);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .project-badge span {
+      font-weight: 600;
+      color: var(--accent-strong);
+    }
+
+    .header-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .title-block h1 {
+      font-size: 26px;
+      letter-spacing: 0.03em;
+    }
+
+    .title-block p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .status-chip {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: rgba(37, 99, 235, 0.15);
+      color: var(--accent-strong);
+      border: 1px solid rgba(59, 130, 246, 0.7);
+    }
+
+    /* LAYOUT как на ДС-правилах: основная колонка + сайдбар */
+    .rules-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.5fr) minmax(260px, 1.3fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .rules-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* LIQUID GLASS карточки */
+    .glass-card {
+      position: relative;
+      padding: 18px 18px 16px;
+      border-radius: var(--radius-lg);
+      background: var(--glass-bg);
+      border: 1px solid var(--border-glass);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(var(--glass-blur));
+      overflow: hidden;
+      transform: translateY(0) scale(1);
+      transition:
+        transform 0.32s cubic-bezier(0.19, 1, 0.22, 1),
+        box-shadow var(--transition-med),
+        border-color var(--transition-med),
+        background var(--transition-med);
+    }
+
+    .glass-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(78, 168, 255, 0.22), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(37, 99, 235, 0.2), transparent 55%);
+      opacity: 0.45;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      transition: opacity var(--transition-med);
+    }
+
+    .glass-card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 26px 65px rgba(3, 10, 30, 0.95);
+      border-color: rgba(78, 168, 255, 0.9);
+      background: rgba(3, 12, 30, 0.92);
+    }
+
+    .glass-card:hover::before {
+      opacity: 0.8;
+    }
+
+    .glass-card + .glass-card {
+      margin-top: 12px;
+    }
+
+    .glass-card.target-active {
+      animation: bounceGlow 1.2s ease-out;
+    }
+
+    @keyframes bounceGlow {
+      0% {
+        transform: translateY(0) scale(1);
+        box-shadow: var(--shadow-soft);
+        border-color: var(--border-glass);
+      }
+      20% {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 30px 70px rgba(78, 168, 255, 0.4);
+        border-color: rgba(78, 168, 255, 0.8);
+      }
+      50% {
+        transform: translateY(-3px) scale(1.01);
+        box-shadow: 0 25px 60px rgba(78, 168, 255, 0.3);
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        box-shadow: var(--shadow-soft);
+        border-color: var(--border-glass);
+      }
+    }
+
+    /* Заголовки блоков */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 18px;
+    }
+
+    .section-index {
+      font-size: 13px;
+      color: var(--accent-strong);
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+    }
+
+    .section-name {
+      font-weight: 600;
+    }
+
+    .section-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(59, 130, 246, 0.7);
+      background: rgba(8, 22, 50, 0.95);
+      color: var(--text-muted);
+    }
+
+    .rules-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .rule-item {
+      position: relative;
+      padding-left: 20px;
+      font-size: 14px;
+      color: var(--text-main);
+      line-height: 1.45;
+    }
+
+    .rule-item::before {
+      content: "•";
+      position: absolute;
+      left: 4px;
+      top: 0;
+      color: var(--accent-strong);
+      font-size: 16px;
+    }
+
+    .rule-code {
+      font-weight: 600;
+      color: var(--accent-strong);
+      margin-right: 4px;
+    }
+
+    .rule-punish {
+      display: inline-block;
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .rule-punish span {
+      font-weight: 500;
+    }
+
+.punish-warn { color: var(--warning); }      /* жёлтый для предупреждения */
+.punish-kick { color: var(--accent-soft); }  /* голубой для кика */
+.punish-ban  { color: var(--danger); }       /* красный для временного бана */
+.punish-perm { color: var(--danger); text-decoration: underline; } /* перм */
+
+
+    /* Сайдбар */
+    .sidebar-block {
+      padding: 16px 16px 14px;
+      border-radius: var(--radius-lg);
+      background: rgba(5, 16, 40, 0.96);
+      border: 1px solid rgba(59, 130, 246, 0.55);
+      backdrop-filter: blur(18px);
+    }
+
+    .sidebar-block + .sidebar-block {
+      margin-top: 12px;
+    }
+
+    .sidebar-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .sidebar-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    footer {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    /* Навигация по разделам (кнопки сверху основной колонки) */
+    .tabs-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .tab-pill {
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.3);
+      background: rgba(9, 16, 35, 0.95);
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .tab-pill span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      box-shadow: 0 0 6px rgba(96,165,250,0.9);
+    }
+
+    .tab-pill:hover {
+      background: rgba(11, 20, 45, 1);
+      color: var(--text-main);
+      border-color: rgba(129,140,248,0.8);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+    }
+
+    .tab-pill.active {
+      background: radial-gradient(circle at top, #3b82f6, #1d4ed8);
+      color: #e5e7eb;
+      border-color: rgba(191,219,254,0.9);
+      box-shadow: 0 14px 36px rgba(37,99,235,0.8);
+    }
+
+    .tab-pill.active span.dot {
+      background: var(--warning);
+      box-shadow: 0 0 10px rgba(250,204,21,0.9);
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <header>
+    <div class="project-badge">
+      <span>Bogorodsk RolePlay</span>
+      ·⠀Правила игры
+    </div>  
+
+    <div class="header-main">
+      <div class="title-block">
+        <h1>Игровые правила проекта</h1>
+        <p>Набор основных правил для игровых серверов Bogorodsk RolePlay — поведение, чат, отыгровки и преступная активность.</p>
+      </div>
+      <div class="status-chip">
+        Версия правил — 1.0 · Могут быть изменены Старшей Администрацией Проекта
+      </div>
+    </div>  
+  </header> 
+
+  <!-- Далее идёт main class="rules-layout" -->
+
+
+  <main class="rules-layout">
+    <section>
+      <!-- Навигационные плашки как на сайте с положениями -->
+      <div class="tabs-row">
+        <button class="tab-pill active" data-target="sec-1"><span class="dot"></span>Общие</button>
+        <button class="tab-pill" data-target="sec-2"><span class="dot"></span>Поведение</button>
+        <button class="tab-pill" data-target="sec-3"><span class="dot"></span>Чат</button>
+        <button class="tab-pill" data-target="sec-4"><span class="dot"></span>Отыгровки</button>
+        <button class="tab-pill" data-target="sec-5"><span class="dot"></span>Преступность</button>
+        <button class="tab-pill" data-target="sec-6"><span class="dot"></span>Наказания</button>
+      </div>
+
+      <!-- 1. Общие положения -->
+      <article class="glass-card" id="sec-1">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="section-index">1.0</span>
+            <span class="section-name">Общие положения</span>
+          </div>
+          <div class="section-tag">Общие</div>
+        </div>
+        <ul class="rules-list">
+          <li class="rule-item">
+            <span class="rule-code">1.1</span>
+            Игрок обязан ознакомиться с игровыми правилами до начала игры. Игнорирование правил не освобождает от ответственности.
+          </li>
+          <li class="rule-item">
+            <span class="rule-code">1.2</span>
+            Приоритет всегда за RolePlay‑отыгровкой и логикой реальной жизни, а не за личной выгодой или победой в ситуации.
+          </li>
+          <li class="rule-item">
+            <span class="rule-code">1.3</span>
+            Администрация проекта имеет право принимать окончательные решения в спорных ситуации и выдавать индивидуальные наказания.
+          </li>
+          <li class="rule-item">
+            <span class="rule-code">1.4</span>
+            Запрещено использование читов, сторонних программ, багов Roblox или скриптов проекта для получения преимущества.
+            <div class="rule-punish">
+              <span class="punish-perm">Наказание:</span> перманентный бан без возможности обжалования.
+            </div>
+          </li>
+        </ul>
+      </article>
+
+      <!-- 2. Поведение в игре -->
+      <article class="glass-card" id="sec-2">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="section-index">2.0</span>
+            <span class="section-name">Поведение в игровом мире</span>
+          </div>
+          <div class="section-tag">Поведение</div>
+        </div>
+        <ul class="rules-list">
+          <li class="rule-item">
+            <span class="rule-code">2.1</span>
+            Запрещён NonRP/NRP — действия, грубо нарушающие логику реальной жизни (катание по городу без цели, таран игроков, парковка на тротуарах и пр.).
+            <div class="rule-punish">
+              <span class="punish-warn">Наказание:</span> предупреждение → кик → временный бан до 3 дней.
+            </div>
+          </li>
+          <li class="rule-item">
+            <span class="rule-code">2.2</span>
+            Запрещён намеренный срыв RP‑ситуаций: выход из игры, уход в AFK, игнор администрации во время проверки.
+            <div class="rule-punish">
+              <span class="punish-ban">Наказание:</span> временный бан от 1 до 7 дней.
+            </div>
+          </li>
+          <li class="rule-item">
+            <span class="rule-code">2.3</span>
+            Запрещена продажа аккаунтов с игровыми привилегиями (доступ к админ-функционалу и пр.).
+            <div class="rule-punish">
+              <span class="punish-ban">Наказание:</span> бан до 30 дней; при повторе — перманентный бан.
+            </div>
+          </li>
+        </ul>
+      </article>
+
+      <!-- 3. Чат и войс -->
+      <article class="glass-card" id="sec-3">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="section-index">3.0</span>
+            <span class="section-name">Текстовой и голосовой чат</span>
+          </div>
+          <div class="section-tag">Чат</div>
+        </div>
+        <ul class="rules-list">
+          <li class="rule-item">
+            <span class="rule-code">3.1</span>
+            Запрещены флуд, спам, злоупотребление капсом и бессмысленные сообщения.
+            <div class="rule-punish">
+              <span class="punish-warn">Наказание:</span> предупреждение → кик → временный бан до 1 дня.
+            </div>
+          </li>
+          <li class="rule-item">
+            <span class="rule-code">3.2</span>
+            Оскорбления, угрозы, разжигание ненависти, расизм, сексизм и иные формы дискриминации строго запрещены.
+            <div class="rule-punish">
+              <span class="punish-ban">Наказание:</span> бан от 3 до 14 дней; при тяжёлых случаях — перманентный бан.
+            </div>
+          </li>
+          <li class="rule-item">
+            <span class="rule-code">3.3</span>
+            В голосовом чате запрещены громкие звуки, скримеры, саундпады и намеренное создание помех.
+            <div class="rule-punish">
+            <div class="rule-punish">
+              <span class="punish-warn">Наказание:</span> предупреждение → кик → временный бан до 1 дня.
+            </div>
+          </li>
+          <li class="rule-item">
+            <span class="rule-code">3.4</span>
+            Реклама сторонних проектов/серверов без согласия администрации запрещена.
+            <div class="rule-punish">
+              <span class="punish-ban">Наказание:</span> бан от 3 до 30 дней.
+            </div>
+          </li>
+        </ul>
+      </article>
+
+      <!-- 4. Отыгровка -->
+      <article class="glass-card" id="sec-4">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="section-index">4.0</span>
+            <span class="section-name">Отыгровка и RP‑механики</span>
+          </div>
+          <div class="section-tag">Отыгровки</div>
+        </div>
+        <ul class="rules-list">
+          <li class="rule-item">
+            <span class="rule-code">4.1</span>
+            IC и OOC‑информация должна быть разделена. Использование OOC в IC (метагейминг) запрещено.
+            <div class="rule-punish">
+              <span class="punish-ban">Наказание:</span> бан от 1 до 7 дней.
+            </div>
+          </li>
+          <li class="rule-item">
+            <span class="rule-code">4.2</span>
+            Запрещён PowerGaming (PG) — нереалистичные действия, невозможные в реальности, а также принуждение игрока к действию без возможности ответить.
+            <div class="rule-punish">
+              <span class="punish-warn">Наказание:</span> предупреждение → бан до 3 дней.
+            </div>
+          </li>
+          <li class="rule-item">
+            <span class="rule-code">4.3</span>
+            Запрещён DeathMatch (DM/RDM) — нападение или убийство без веской RP‑причины.
+            <div class="rule-punish">
+              <span class="punish-ban">Наказание:</span> бан от 1 до 14 дней; при массовом DM — до 30 дней.
+            </div>
+          </li>
+          <li class="rule-item">
+            <span class="rule-code">4.4</span>
+            Запрещён RevengeKill (RK) — возвращение к месту своей смерти с целью мести без новой RP‑подводки.
+            <div class="rule-punish">
+              <span class="punish-ban">Наказание:</span> бан от 1 до 7 дней.
+            </div>
+          </li>
+          <li class="rule-item">
+            <span class="rule-code">4.5</span>
+            Нельзя покидать игру во время активной RP‑ситуации, задержания или разборов администрации (LeaveRP).
+            <div class="rule-punish">
+              <span class="punish-ban">Наказание:</span> бан от 1 до 7 дней.
+            </div>
+          </li>
+        </ul>
+      </article>
+
+      <!-- 5. Преступность -->
+      <article class="glass-card" id="sec-5">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="section-index">5.0</span>
+            <span class="section-name">Преступность и силовые сцены</span>
+          </div>
+          <div class="section-tag">Преступность</div>
+        </div>
+        <ul class="rules-list">
+          <li class="rule-item">
+            <span class="rule-code">5.1</span>
+            Ограбления, захваты, похищения и перестрелки должны иметь логичную подготовку и мотивацию персонажей.
+          </li>
+          <li class="rule-item">
+            <span class="rule-code">5.2</span>
+            Численное преимущество должно быть разумным. 
+          </li>
+          <li class="rule-item">
+            <span class="rule-code">5.3</span>
+            Запрещены NonRP‑погони: езда по крышам, полям и постоянные тараны без разумной причины.
+          </li>
+          <li class="rule-item">
+            <span class="rule-code">5.4</span>
+            При смерти персонажа в крупной RP‑ситуации детали конфликта частично забываются (запрещено сразу возвращаться и использовать эту информацию).
+          </li>
+        </ul>
+      </article>
+
+      <!-- 6. Система наказаний -->
+      <article class="glass-card" id="sec-6">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="section-index">6.0</span>
+            <span class="section-name">Система наказаний</span>
+          </div>
+          <div class="section-tag">Наказания</div>
+        </div>
+         <ul class="rules-list">
+    <li class="rule-item">
+      <span class="rule-code">6.1</span>
+      <span class="punish-warn"><strong>Предупреждение</strong></span> — устное/текстовое замечание, фиксируется в логах и влияет на последующие решения администрации.
+    </li>
+    <li class="rule-item">
+      <span class="rule-code">6.2</span>
+      <span class="punish-kick"><strong>Кик</strong></span> — разовое отключение от сервера за лёгкие, но мешающие нарушения (NonRP, неадекватное поведение и т.п.).
+    </li>
+    <li class="rule-item">
+      <span class="rule-code">6.3</span>
+      <span class="punish-ban"><strong>Временный бан</strong></span> — блокировка доступа от 1 часа до 30 дней за серьёзные нарушения RP‑режима и правил проекта.
+    </li>
+    <li class="rule-item">
+      <span class="rule-code">6.4</span>
+      <span class="punish-perm"><strong>Перманентный бан</strong></span> — бессрочная блокировка за использование читов, систематические грубые нарушения и угрозу проекту.
+    </li>
+  </ul>
+      </article>
+    </section>
+
+    <!-- Сайдбар -->
+    <aside>
+      <div class="sidebar-block">
+        <div class="sidebar-title">Назначение страницы</div>
+        <p class="sidebar-note">
+Представленные правила регулируют действия игроков внутри игры и фиксируют границы дозволенного. Соблюдение этих положений является основой для построения и обеспечения нормального уровня RP в нашей игре.
+
+        </p>
+      </div>
+
+
+      <div class="sidebar-block">
+        <div class="sidebar-title">Изменение правил</div>
+        <p class="sidebar-note">
+          Администрация может дополнять и изменять правила в любой момент. Актуальная версия всегда размещена на данной странице.
+        </p>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    Bogorodsk RolePlay
+  </footer>
+</div>
+
+<script>
+  // Навигационные плашки: скролл + подсветка + подпрыгивание карточки
+  const pills = document.querySelectorAll('.tab-pill');
+  const sections = document.querySelectorAll('.glass-card');
+
+  function clearActive() {
+    pills.forEach(p => p.classList.remove('active'));
+    sections.forEach(s => s.classList.remove('target-active'));
+  }
+
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      const targetId = pill.getAttribute('data-target');
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      clearActive();
+      pill.classList.add('active');
+      target.classList.add('target-active');
+
+      const offset = 80; // небольшой отступ от верха
+      const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top,
+        behavior: 'smooth'
+      });
+
+      setTimeout(() => target.classList.remove('target-active'), 1400);
+    });
+  });
+</script>
+</body>
+</html>
